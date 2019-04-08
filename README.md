@@ -1,4 +1,7 @@
 # Virtual-Desktop-Switcher
+
+![GitHub Pre-Releases (by Asset)](https://img.shields.io/github/downloads-pre/hangacs/VirtualDesktopSwitcher/latest/VirtualDesktopSwithcer.zip.svg)
+
 A virtual desktop switcher appear on windows taskbar, working by send keyboard event to system.
 
 This program will create 2 icons on task bar. Please drag them out from system tray if you can't see.
