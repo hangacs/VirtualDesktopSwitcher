@@ -5,7 +5,7 @@ A virtual desktop switcher appear on windows taskbar, working by send keyboard e
 This program will create 2 icons on task bar. Please drag them out from system tray if you can't see.
 Add program shortcut to "C:\Users\username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup".
 
-[Download](https://github.com/hangacs/VirtualDesktopSwitcher/releases/download/untagged-a1a5a50fbdc3d7b4d26c/VertualDesktopSwitcher.zip)
+[Download](https://github.com/hangacs/VirtualDesktopSwitcher/releases)
 
 ## Screenshot
 
