@@ -5,7 +5,7 @@
 A virtual desktop switcher appear on windows taskbar, working by send default keyboard shortcuts to system.
 
 This program will create 2 icons on task bar. Please drag them out from system tray if you can't see.
-Add program shortcut to "C:\Users\username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" to make it run with system start.
+Add program shortcut to _"C:\Users\username\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"_ to make it run with system start.
 
 [Download](https://github.com/hangacs/VirtualDesktopSwitcher/releases)
 
