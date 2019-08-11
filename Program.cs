@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
 
-namespace VitrualDesktopSwitcher
+namespace VirtualDesktopSwitcher
 {
-    
     static class Program
     {
         [STAThread]
@@ -18,6 +13,7 @@ namespace VitrualDesktopSwitcher
 
         public const int KEYEVENTF_KEYDOWN = 0x0000; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
+
         //Key Code
         public const int VK_LCONTROL = 0x0011;
         public const int VK_WIN = 0x005B;
@@ -35,12 +31,12 @@ namespace VitrualDesktopSwitcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //Left Notify Icon
+            //Initialize Left Notify Icon
             notifyIconLeft.Text="Left";
             notifyIconLeft.ContextMenuStrip = GetContext();
             notifyIconLeft.Icon = new Icon("Left.ico");
 
-            //Right Notify Icon
+            //Initialize Right Notify Icon
             notifyIconRight.Text = "Right";
             notifyIconRight.ContextMenuStrip = GetContext();
             notifyIconRight.Icon = new Icon("Right.ico");
@@ -52,6 +48,7 @@ namespace VitrualDesktopSwitcher
             notifyIconRight.MouseClick += RightClickHandler;
 
             Application.Run();
+            Console.WriteLine(Cursor.Position.Y);
         }
 
         //Contex Menu
@@ -62,14 +59,14 @@ namespace VitrualDesktopSwitcher
             CMS.Items.Add("Close Current Desktop", null, new EventHandler(Close_Current_Desktop));
             CMS.Items.Add("Open New Desktop", null, new EventHandler(Open_New_Desktop));
             CMS.Items.Add("Exit",null,new EventHandler(Exit_Click));
-            
+
             return CMS;
         }
         private static void About_Program(object sender,EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/hangacs/VirtualDesktopSwitcher");
         }
-        
+
         private static void Close_Current_Desktop(object sender, EventArgs e)
         {
             CloseCurentDesktop();
@@ -79,13 +76,13 @@ namespace VitrualDesktopSwitcher
             OpenNewDesktop();
         }
 
-        
         private static void Exit_Click(object sender, EventArgs e)
         {
             notifyIconLeft.Dispose();
             notifyIconRight.Dispose();
             Application.Exit();
         }
+
         //Switch Virtual Desktop
         private static void LeftClickHandler(object sender,MouseEventArgs e)
         {
@@ -102,43 +99,34 @@ namespace VitrualDesktopSwitcher
             }
         }
 
-
+        #region Keyboard Event
         public static void OpenNewDesktop()
         {
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_WIN, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(KEY_D, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(VK_WIN, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(KEY_D, 0, KEYEVENTF_KEYUP, 0);
+            CombineKey(KEY_D);
         }
         public static void CloseCurentDesktop()
         {
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_WIN, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_F4, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(VK_WIN, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(VK_F4, 0, KEYEVENTF_KEYUP, 0);
+            CombineKey(VK_F4);
         }
         public static void GoLeftDesktop()
         {
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_WIN, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_LEFT, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(VK_WIN, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(VK_LEFT, 0, KEYEVENTF_KEYUP, 0);
+            CombineKey(VK_LEFT);
         }
         public static void GoRightDesktop()
         {
+            CombineKey(VK_RIGHT);
+        }
+        #endregion
+
+        public static void CombineKey(byte KEY)
+        {
             keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYDOWN, 0);
             keybd_event(VK_WIN, 0, KEYEVENTF_KEYDOWN, 0);
-            keybd_event(VK_RIGHT, 0, KEYEVENTF_KEYDOWN, 0);
+            keybd_event(KEY, 0, KEYEVENTF_KEYDOWN, 0);
+
             keybd_event(VK_LCONTROL, 0, KEYEVENTF_KEYUP, 0);
             keybd_event(VK_WIN, 0, KEYEVENTF_KEYUP, 0);
-            keybd_event(VK_RIGHT, 0, KEYEVENTF_KEYUP, 0);
+            keybd_event(KEY, 0, KEYEVENTF_KEYUP, 0);
         }
-        
     }
 }
