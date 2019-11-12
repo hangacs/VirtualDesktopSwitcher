@@ -48,7 +48,6 @@ namespace VirtualDesktopSwitcher
             notifyIconRight.MouseClick += RightClickHandler;
 
             Application.Run();
-            Console.WriteLine(Cursor.Position.Y);
         }
 
         //Contex Menu
