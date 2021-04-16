@@ -1,6 +1,6 @@
 # Virtual-Desktop-Switcher
 
-![GitHub release](https://img.shields.io/github/release/hangacs/VirtualDesktopSwitcher.svg) ![GitHub Releases (by Asset)](https://img.shields.io/github/downloads/hangacs/VirtualDesktopSwitcher/latest/VirtualDesktopSwitcher.v0.0.2.zip.svg)
+![GitHub release](https://img.shields.io/github/release/hangacs/VirtualDesktopSwitcher.svg) ![GitHub all releases](https://img.shields.io/github/downloads/hangacs/virtualdesktopswitcher/total)
 
 A virtual desktop switcher appear on windows taskbar, working by send default keyboard shortcuts to system.
 
