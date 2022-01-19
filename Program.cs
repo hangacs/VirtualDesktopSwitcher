@@ -82,7 +82,7 @@ namespace VirtualDesktopSwitcher
             CMS.Items.Add("About", null, new EventHandler((o, e) => System.Diagnostics.Process.Start("https://github.com/hangacs/VirtualDesktopSwitcher")));
             CMS.Items.Add("Close Current Desktop", null, new EventHandler((o, e) => CloseCurrentDesktop()));
             CMS.Items.Add("Open New Desktop", null, new EventHandler((o, e) => OpenNewDesktop()));
-            CMS.Items.Add(new ToolStripMenuItem("StartWithWindows", null,
+            CMS.Items.Add(new ToolStripMenuItem("Start With Windows", null,
                 (o, e) => {
                     StartWithWindows = !StartWithWindows;
                     AutoStart(StartWithWindows);
