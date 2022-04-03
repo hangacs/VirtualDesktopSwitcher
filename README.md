@@ -11,3 +11,8 @@ This program will create 2 icons on task bar. Please drag them out from system t
 ## Screenshot
 
 ![screenshot](https://github.com/hangacs/VirtualDesktopSwitcher/blob/8bc7013cec9e42635fe7b04c59918000fd23e109/screenshot.png)
+
+## Usage
+
+- Click or scroll on notify icon to switch virtual desktop
+- Right click on notify icon to open context menu
