@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using System.Drawing;
 using static VirtualDesktopSwitcher.KeyboardEventHelper;
+using Linearstar.Windows.RawInput;
+using System.Linq;
+using Linearstar.Windows.RawInput.Native;
 
 namespace VirtualDesktopSwitcher
 {
@@ -11,6 +13,8 @@ namespace VirtualDesktopSwitcher
         private static NotifyIcon notifyIconLeft;
         private static NotifyIcon notifyIconRight;
 
+        private static RawInputReceiverWindow reciever;
+
         private static bool StartWithWindows;
 
         [STAThread]
@@ -18,17 +22,42 @@ namespace VirtualDesktopSwitcher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.ApplicationExit += Clean;
 
-            InitializeNotifyIcon();
-            SetMouseWheelHook();
+            CreateNotifyIcon();
+            RegisterRawInput();
 
             Application.Run();
         }
 
-        private static void InitializeNotifyIcon()
+        private static void Clean(object sender, EventArgs e)
+        {
+            RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
+        }
+
+        static void RegisterRawInput()
+        {
+            reciever = new RawInputReceiverWindow();
+
+            var devices = RawInputDevice.GetDevices();
+            var mouse = devices.OfType<RawInputMouse>();
+
+            reciever.Input += (sender, e) => MouseWheelScroll(e.Data);
+
+            try
+            {
+                RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.ExInputSink, reciever.Handle);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to enable scroll function. {ex.Message}");
+            }
+        }
+
+        private static void CreateNotifyIcon()
         {
             StartWithWindows = IsStartWithWindows();
-            var contextMenuStrip = GetContext();
+            var contextMenuStrip = CreateContextMenuStrip();
 
             notifyIconLeft = new NotifyIcon()
             {
@@ -66,34 +95,26 @@ namespace VirtualDesktopSwitcher
             }
         }
 
-        private static void SetMouseWheelHook()
-        {
-            MouseHook mouseHook = new MouseHook();
-            mouseHook.MouseWheel += new MouseHook.MouseHookCallback(MouseWheelScroll);
-            mouseHook.Install();
-        }
-
-        private static void MouseWheelScroll(MouseHook.MSLLHOOKSTRUCT mouseStruct)
+        private static void MouseWheelScroll(RawInputData data)
         {
             var lRect = NotifyIconHelper.GetIconRect(notifyIconLeft);
             var rRect = NotifyIconHelper.GetIconRect(notifyIconRight);
 
-            if (InRect(mouseStruct.x, mouseStruct.y, lRect) || InRect(mouseStruct.x, mouseStruct.y, rRect))
-                ScrollVirtualDesktop(mouseStruct.mouseData);
+            if (NotifyIconHelper.InRect(Cursor.Position, lRect) || NotifyIconHelper.InRect(Cursor.Position, rRect))
+                ScrollVirtualDesktop((data as RawInputMouseData).Mouse);
         }
 
-        private static bool InRect(int x, int y, Rectangle rect)
-            => x < rect.Right && x > rect.Left && y < rect.Bottom && y > rect.Top;
-
-        private static void ScrollVirtualDesktop(int mouseData)
+        private static void ScrollVirtualDesktop(RawMouse mouse)
         {
-            if (mouseData > 0)
+            if (!mouse.Buttons.HasFlag(RawMouseButtonFlags.MouseWheel)) return;
+
+            if (mouse.ButtonData > 0)
                 GoToLeftDesktop();
-            else
+            else if (mouse.ButtonData < 0)
                 GoToRightDesktop();
         }
 
-        private static ContextMenuStrip GetContext()
+        private static ContextMenuStrip CreateContextMenuStrip()
         {
             ContextMenuStrip CMS = new ContextMenuStrip();
 
@@ -136,7 +157,7 @@ namespace VirtualDesktopSwitcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to add registry key. {ex.Message}", "Error");
+                MessageBox.Show($"Failed to get registry key. {ex.Message}", "Error");
                 return false;
             }
         }

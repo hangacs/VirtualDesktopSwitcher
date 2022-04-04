@@ -61,4 +61,7 @@ sealed class NotifyIconHelper
         if (idField == null) throw new InvalidOperationException("[Useful error message]");
         return (int)idField.GetValue(icon);
     }
+
+    public static bool InRect(Point point, Rectangle rect)
+        => point.X < rect.Right && point.X > rect.Left && point.Y < rect.Bottom && point.Y > rect.Top;
 }
